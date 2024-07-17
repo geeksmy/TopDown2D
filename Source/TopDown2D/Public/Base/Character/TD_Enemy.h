@@ -7,6 +7,7 @@
 #include "Base/Interface/TD_EnemyInterface.h"
 #include "TD_Enemy.generated.h"
 
+class UDamageNumComponent;
 class UPaperZDAnimSequence;
 
 UCLASS()
@@ -17,15 +18,21 @@ class TOPDOWN2D_API ATD_Enemy : public ATD_CharacterBase, public ITD_EnemyInterf
 public:
 	ATD_Enemy();
 
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Anim")
-	TObjectPtr<UPaperZDAnimSequence> MoveAnim;
-
 public:
 	UPaperZDAnimSequence* GetMoveAnim() { return MoveAnim; }
 
 	void SetColor();
 	virtual void HitEffect(const float Damage) override;
+
+	UFUNCTION(Client, Reliable)
+	void ShowDamageNumber(const float Damage, bool bBlockedHit, bool bCriticalHit);
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Anim")
+	TObjectPtr<UPaperZDAnimSequence> MoveAnim;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<UDamageNumComponent> DamageComponentClass;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

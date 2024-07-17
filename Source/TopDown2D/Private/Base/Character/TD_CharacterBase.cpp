@@ -6,12 +6,10 @@
 #include "PaperFlipbookComponent.h"
 #include "PaperZDAnimationComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "PaperZDCustomVersion.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
-const FGuid FPaperZDCustomVersion::GUID(0x11310AED, 0x2E554D61, 0xAF679AA3, 0xC5A1082A);
 
 ATD_CharacterBase::ATD_CharacterBase()
 {
@@ -42,7 +40,7 @@ void ATD_CharacterBase::PostLoad()
 void ATD_CharacterBase::Serialize(FArchive& Ar)
 {
 	Super::Serialize(Ar);
-	Ar.UsingCustomVersion(FPaperZDCustomVersion::GUID);
+	Ar.UsingCustomVersion(FGuid(0x11310AED, 0x2E554D61, 0xAF679AA3, 0xC5A1082A));
 }
 
 void ATD_CharacterBase::PostInitializeComponents()

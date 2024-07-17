@@ -7,6 +7,7 @@
 #include "GameFramework/PlayerController.h"
 #include "TD_PlayerControllerBase.generated.h"
 
+class UDamageNumComponent;
 class UPaperFlipbook;
 struct FInputActionValue;
 class UIA_Base;
@@ -25,7 +26,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UIA_Base> MoveIA;
-	
+
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UIA_Base> ShootIA;
 
@@ -41,4 +42,5 @@ private:
 	void Move(const FInputActionValue& Value);
 	UFUNCTION()
 	void Shoot(const FInputActionValue& Value);
+
 };

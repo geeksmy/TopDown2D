@@ -11,6 +11,7 @@
 #include "Core/TD_GameplayTags.h"
 #include "Core/TD_KismetSystemLibrary.h"
 #include "Core/Game/TD_GameInstance.h"
+#include "Core/UI/Widget/DamageNumComponent.h"
 
 void ATD_PlayerControllerBase::BeginPlay()
 {
