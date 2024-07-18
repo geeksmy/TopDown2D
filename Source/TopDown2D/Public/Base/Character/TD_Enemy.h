@@ -18,6 +18,9 @@ class TOPDOWN2D_API ATD_Enemy : public ATD_CharacterBase, public ITD_EnemyInterf
 public:
 	ATD_Enemy();
 
+protected:
+	virtual void Tick(float DeltaSeconds) override;
+
 public:
 	UPaperZDAnimSequence* GetMoveAnim() { return MoveAnim; }
 

@@ -4,6 +4,7 @@
 #include "Base/Character/TD_Enemy.h"
 
 #include "PaperFlipbookComponent.h"
+#include "Base/Player/TD_AIControllerBase.h"
 #include "Components/CapsuleComponent.h"
 #include "Core/TD_GameplayTags.h"
 #include "Core/TD_KismetSystemLibrary.h"
@@ -27,6 +28,13 @@ ATD_Enemy::ATD_Enemy()
 	Tags.Add(FTD_GameplayTags::Get().CharacterEnemy.GetTagName());
 	
 	DamageComponentClass = UDamageNumComponent::StaticClass();
+	AIControllerClass = ATD_AIControllerBase::StaticClass();
+}
+
+void ATD_Enemy::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	SetActorRotation(FRotator(0.f));
 }
 
 void ATD_Enemy::SetColor()

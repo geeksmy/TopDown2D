@@ -23,6 +23,10 @@ public:
 	template <class UserClass>
 	static void SetTimer(const UObject* WorldContextObject, UserClass* InObj,
 	                     typename FTimerDelegate::TMethodPtr<UserClass> InTimerMethod, float InRate);
+
+
+	static FTimerHandle SetTimerDelegate(FTimerDynamicDelegate Delegate, float Time, bool bLooping, bool bMaxOncePerFrame = false, float InitialStartDelay = 0.f, float InitialStartDelayVariance = 0.f);
+	static void ClearTimerHandle(const UObject* WorldContextObject, FTimerHandle Handle);
 };
 
 template <class UserClass>

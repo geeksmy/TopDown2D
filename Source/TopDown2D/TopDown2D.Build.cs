@@ -25,7 +25,8 @@ public class TopDown2D : ModuleRules
 		PrivateDependencyModuleNames.AddRange(new string[]
 		{
 			"GameplayTags",
-			"GameplayTasks"
+			"GameplayTasks", 
+			"AIModule",
 		});
 
 		// Uncomment if you are using Slate UI
