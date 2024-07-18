@@ -31,6 +31,13 @@ ATD_Enemy::ATD_Enemy()
 	AIControllerClass = ATD_AIControllerBase::StaticClass();
 }
 
+void ATD_Enemy::BeginPlay()
+{
+	Super::BeginPlay();
+	GetCharacterMovement()->MaxWalkSpeed = DAEnemy->Speed;
+	MoveAnim = DAEnemy->MoveAnim;
+}
+
 void ATD_Enemy::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);

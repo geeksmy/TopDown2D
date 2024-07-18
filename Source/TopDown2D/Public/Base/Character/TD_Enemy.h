@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "TD_CharacterBase.h"
 #include "Base/Interface/TD_EnemyInterface.h"
+#include "Core/Data/DA_Enemy.h"
 #include "TD_Enemy.generated.h"
 
 class UDamageNumComponent;
@@ -19,6 +20,7 @@ public:
 	ATD_Enemy();
 
 protected:
+	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 
 public:
@@ -33,6 +35,9 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Anim")
 	TObjectPtr<UPaperZDAnimSequence> MoveAnim;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Data")
+	TObjectPtr<UDA_Enemy> DAEnemy;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<UDamageNumComponent> DamageComponentClass;
