@@ -30,6 +30,8 @@ public:
 	float Exp;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName="存活时间")
 	float SurviveTime;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName="重量(影响击退距离)")
+	float Weight;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName="Boss")
 	bool bBoos;
 };

@@ -36,8 +36,9 @@ public:
 	 * @param InTargetTag 目标标签 
 	 * @param InSurvival 存活时间
 	 * @param InActorLocation 武器发射位置
+	 * @param InWallop 冲击力
 	 */
 	void SetWeapons(UPaperFlipbook* InFlipbook, const float InDamage, const FVector& InVelocity,
 	                const FVector& InWeaponScale, const FVector& InSphereScale, const FVector& InActorLocation,
-	                const FGameplayTag& InTargetTag, const float InSurvival);
+	                const FGameplayTag& InTargetTag, const float InSurvival, const float InWallop);
 };

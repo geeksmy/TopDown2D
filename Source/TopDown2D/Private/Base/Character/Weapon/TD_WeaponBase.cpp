@@ -36,7 +36,7 @@ ATD_WeaponBase::ATD_WeaponBase()
 
 void ATD_WeaponBase::SetParam(UPaperFlipbook* InFlipbook, const float InDamage, const FVector& InVelocity,
                               const FVector& InWeaponScale, const FVector& InSphereScale,
-                              const FGameplayTag& InTargetTag, const float InSurvival)
+                              const FGameplayTag& InTargetTag, const float InSurvival, const float InWallop)
 {
 	WeaponFlipbook->SetFlipbook(InFlipbook);
 	WeaponFlipbook->SetRelativeScale3D(InWeaponScale);
@@ -44,6 +44,7 @@ void ATD_WeaponBase::SetParam(UPaperFlipbook* InFlipbook, const float InDamage, 
 	Sphere->SetRelativeScale3D(InSphereScale);
 	Damage = InDamage;
 	TargetTag = InTargetTag;
+	Wallop = InWallop;
 
 	WeaponState = EWeaponState::Active;
 
@@ -57,6 +58,7 @@ void ATD_WeaponBase::Reclaim()
 	ProjectileMovement->Velocity = FVector(0.f);
 	Sphere->SetRelativeScale3D(FVector(1.f));
 	Damage = 0.f;
+	Wallop = 0.f;
 	TargetTag = FGameplayTag();
 	SetActorLocation(FVector(10000.f, 10000.f, -1000.f));
 	WeaponState = EWeaponState::Reclaim;
@@ -69,12 +71,12 @@ void ATD_WeaponBase::BeginPlay()
 }
 
 void ATD_WeaponBase::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                  UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+                                  const FHitResult& SweepResult)
 {
 	if (OtherActor->ActorHasTag(TargetTag.GetTagName()))
 	{
 		ATD_Enemy* Enemy = Cast<ATD_Enemy>(OtherActor);
-		Enemy->HitEffect(Damage);
+		Enemy->HitEffect(Damage, Wallop);
 	}
 }
-

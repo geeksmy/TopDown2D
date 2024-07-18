@@ -7,6 +7,7 @@
 #include "Base/Character/TD_Enemy.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Core/TD_KismetSystemLibrary.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Navigation/PathFollowingComponent.h"
 
@@ -37,15 +38,16 @@ void ATD_AIControllerBase::MoveToTarget()
 
 void ATD_AIControllerBase::OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result)
 {
-	if (Result.IsFailure())
-	{
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Red, TEXT("移动失败"));
-		MoveToTargetHandle = UTD_KismetSystemLibrary::SetTimerDelegate(MoveToTargetDelegate, 0.5, true);
-	}
 	if (Result.IsSuccess())
 	{
-		GEngine->AddOnScreenDebugMessage(2, 5.f, FColor::Red, TEXT("移动成功"));
 		UTD_KismetSystemLibrary::ClearTimerHandle(this, MoveToTargetHandle);
 		UTD_KismetSystemLibrary::SetTimer(this, this, &ATD_AIControllerBase::MoveToTarget, 0.2);
+		return;
+	}
+	if (Result.IsFailure())
+	{
+		ATD_Enemy* Enemy = Cast<ATD_Enemy>(this->GetPawn());
+		Enemy->GetCharacterMovement()->MovementMode = MOVE_NavWalking;
+		MoveToTargetHandle = UTD_KismetSystemLibrary::SetTimerDelegate(MoveToTargetDelegate, 0.5, true);
 	}
 }

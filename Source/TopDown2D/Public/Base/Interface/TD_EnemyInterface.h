@@ -24,6 +24,7 @@ public:
 	/** 受击效果
 	 * 
 	 * @param Damage 伤害
+	 * @param Wallop 冲击力
 	 */
-	virtual void HitEffect(const float Damage) = 0;
+	virtual void HitEffect(const float Damage, const float Wallop) = 0;
 };

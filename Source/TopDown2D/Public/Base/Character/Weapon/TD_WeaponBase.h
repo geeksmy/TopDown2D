@@ -31,6 +31,9 @@ public:
 	float Damage = 0.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float Wallop = 0.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FGameplayTag TargetTag = FGameplayTag();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -59,10 +62,11 @@ public:
 	 * @param InSphereScale Sphere尺寸
 	 * @param InTargetTag 目标标签 
 	 * @param InSurvival 存活时间
+	 * @param InWallop 冲击力
 	 */
 	void SetParam(UPaperFlipbook* InFlipbook, const float InDamage, const FVector& InVelocity,
 	              const FVector& InWeaponScale, const FVector& InSphereScale, const FGameplayTag& InTargetTag,
-	              const float InSurvival);
+	              const float InSurvival, const float InWallop);
 
 	void Reclaim();
 

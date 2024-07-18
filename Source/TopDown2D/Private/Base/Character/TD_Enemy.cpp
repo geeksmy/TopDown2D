@@ -26,9 +26,11 @@ ATD_Enemy::ATD_Enemy()
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
 	Tags.Add(FTD_GameplayTags::Get().CharacterEnemy.GetTagName());
-	
+
 	DamageComponentClass = UDamageNumComponent::StaticClass();
 	AIControllerClass = ATD_AIControllerBase::StaticClass();
+
+	GetCharacterMovement()->FallingLateralFriction = 2.f;
 }
 
 void ATD_Enemy::BeginPlay()
@@ -45,17 +47,28 @@ void ATD_Enemy::Tick(float DeltaSeconds)
 }
 
 void ATD_Enemy::SetColor()
-{ 
+{
 	Sprite->SetSpriteColor(FColor::White);
 }
 
-void ATD_Enemy::HitEffect(const float Damage)
+void ATD_Enemy::Repelled(const float Wallop)
+{
+	GetCharacterMovement()->StopMovementImmediately();
+	FVector Direction = (GetActorLocation() - UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation()).
+		GetSafeNormal();
+	LaunchCharacter(Direction * (Wallop / DAEnemy->Weight), true, false);
+}
+
+void ATD_Enemy::HitEffect(const float Damage, const float Wallop)
 {
 	Sprite->SetSpriteColor(FColor::Red);
 	UGameplayStatics::PlaySound2D(this, HitSound);
 
 	ShowDamageNumber(Damage, false, false);
-	
+
+	// 击退
+	Repelled(Wallop);
+
 	UTD_KismetSystemLibrary::SetTimer(this, this, &ATD_Enemy::SetColor, 0.1);
 }
 
@@ -66,17 +79,17 @@ void ATD_Enemy::ShowDamageNumber_Implementation(const float Damage, bool bBlocke
 	{
 		// 创建一个新的损坏数字组件，用于显示伤害效果
 		UDamageNumComponent* DamageNum = NewObject<UDamageNumComponent>(this, DamageComponentClass);
-		
+
 		// 注册组件，使其成为有效的游戏对象
 		DamageNum->RegisterComponent();
-		
+
 		// 将损坏数字组件附加到目标角色的根组件上，保持相对位置
 		DamageNum->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-		
+
 		// 从目标角色的根组件上分离损坏数字组件，保持世界位置
 		// 这一步可能是为了在显示完伤害数字后，将其从角色上移除，避免持续占用资源
 		DamageNum->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-		
+
 		// 设置损坏数字的值，是否被阻挡以及是否为暴击
 		// 这里将伤害值、是否被阻挡和是否为暴击的信息传递给损坏数字组件，用于正确显示伤害效果
 		DamageNum->SetDamageNum(Damage, bBlockedHit, bCriticalHit);

@@ -27,7 +27,8 @@ public:
 	UPaperZDAnimSequence* GetMoveAnim() { return MoveAnim; }
 
 	void SetColor();
-	virtual void HitEffect(const float Damage) override;
+	void Repelled(const float Wallop);
+	virtual void HitEffect(const float Damage, const float Wallop) override;
 
 	UFUNCTION(Client, Reliable)
 	void ShowDamageNumber(const float Damage, bool bBlockedHit, bool bCriticalHit);

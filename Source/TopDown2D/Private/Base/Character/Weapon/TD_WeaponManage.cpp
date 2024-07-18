@@ -23,10 +23,10 @@ void ATD_WeaponManage::BeginPlay()
 
 void ATD_WeaponManage::SetWeapons(UPaperFlipbook* InFlipbook, const float InDamage, const FVector& InVelocity,
                                   const FVector& InWeaponScale, const FVector& InSphereScale,
-                                  const FVector& InActorLocation,
-                                  const FGameplayTag& InTargetTag, const float InSurvival)
+                                  const FVector& InActorLocation, const FGameplayTag& InTargetTag,
+                                  const float InSurvival, const float InWallop)
 {
-	ATD_WeaponBase* WeaponReclaim  = nullptr;
+	ATD_WeaponBase* WeaponReclaim = nullptr;
 	for (const TObjectPtr<ATD_WeaponBase> Weapon : Weapons)
 	{
 		if (Weapon->WeaponState == EWeaponState::Reclaim)
@@ -43,5 +43,6 @@ void ATD_WeaponManage::SetWeapons(UPaperFlipbook* InFlipbook, const float InDama
 	}
 
 	WeaponReclaim->SetActorLocation(InActorLocation);
-	WeaponReclaim->SetParam(InFlipbook, InDamage, InVelocity, InWeaponScale, InSphereScale, InTargetTag, InSurvival);
+	WeaponReclaim->SetParam(InFlipbook, InDamage, InVelocity, InWeaponScale, InSphereScale, InTargetTag, InSurvival,
+	                        InWallop);
 }

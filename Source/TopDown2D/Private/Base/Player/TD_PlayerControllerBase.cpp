@@ -62,5 +62,5 @@ void ATD_PlayerControllerBase::Shoot(const FInputActionValue& Value)
 	const FVector Velocity = FRotator(
 		0.f, FRotationMatrix::MakeFromX(CursorHit.Location - ActorLocation).Rotator().Yaw, 0.f).Vector() * 200.f;
 	Instance->TD_WeaponManage->SetWeapons(ShuriKen, 5.f, Velocity, FVector(1.f), FVector(1.f),
-	                                      ActorLocation, FTD_GameplayTags::Get().CharacterEnemy, 1.f);
+	                                      ActorLocation, FTD_GameplayTags::Get().CharacterEnemy, 1.f, 15.f);
 }
