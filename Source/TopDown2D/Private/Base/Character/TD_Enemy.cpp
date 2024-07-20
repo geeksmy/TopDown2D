@@ -32,6 +32,7 @@ ATD_Enemy::ATD_Enemy()
 	AIControllerClass = ATD_AIControllerBase::StaticClass();
 
 	GetCharacterMovement()->FallingLateralFriction = 2.f;
+	GetCharacterMovement()->MovementMode = MOVE_NavWalking;
 }
 
 void ATD_Enemy::BeginPlay()
@@ -56,7 +57,7 @@ void ATD_Enemy::SetColor()
 void ATD_Enemy::Repelled(const float Wallop)
 {
 	GetCharacterMovement()->StopMovementImmediately();
-	FVector Direction = (GetActorLocation() - UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation()).
+	const FVector Direction = (GetActorLocation() - UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation()).
 		GetSafeNormal();
 	LaunchCharacter(Direction * (Wallop / DAEnemy->Weight), true, false);
 }

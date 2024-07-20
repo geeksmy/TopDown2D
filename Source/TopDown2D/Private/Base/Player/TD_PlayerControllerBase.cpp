@@ -64,7 +64,5 @@ void ATD_PlayerControllerBase::Shoot(const FInputActionValue& Value)
 	                                 ActorLocation, FTD_GameplayTags::Get().CharacterEnemy, 1.f, 15.f);
 
 	// 临时生成敌人
-	const FVector Location = FVector(0.f, 0.f, -1000.f);
-	const FRotator Rotator = FRotator(0);
-	GetWorld()->SpawnActor(ATD_Skull::StaticClass(), &Location, &Rotator);
+	GetWorld()->SpawnActor<ATD_Skull>(FVector(0.f, 0.f, -1000.f), FRotator::ZeroRotator);
 }

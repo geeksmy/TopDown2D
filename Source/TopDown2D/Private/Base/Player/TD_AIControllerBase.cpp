@@ -29,30 +29,31 @@ void ATD_AIControllerBase::MoveToTarget()
 	ATD_Enemy* Enemy = Cast<ATD_Enemy>(this->GetPawn());
 	if (IsValid(Enemy) && IsValid(CharacterBase))
 	{
-		GEngine->AddOnScreenDebugMessage(1, 10.f, FColor::Red, Enemy->GetActorLocation().ToString());
-		GEngine->AddOnScreenDebugMessage(2, 10.f, FColor::Red, CharacterBase->GetActorLocation().ToString());
+		
 		MoveToActor(CharacterBase, 5.f, false);
 	}
 }
 
 void ATD_AIControllerBase::SpawnPoint()
-{	
+{
 	// 获取游戏中的第一个玩家的棋子，以便为玩家提供新的随机位置。
 	const APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
-	
+
 	// 生成一个随机位置，该位置在玩家当前位置的可导航半径内。
 	FVector RandomLocation;
-	UTD_KismetSystemLibrary::GetGetRandomLocationInNavigableRadius(this, PlayerPawn->GetActorLocation(), RandomLocation, 900.f);
-	
+	UTD_KismetSystemLibrary::GetGetRandomLocationInNavigableRadius(this, PlayerPawn->GetActorLocation(), RandomLocation,
+	                                                               900.f);
+
 	// 检查生成的随机位置是否在屏幕范围内，如果不在，则将玩家传送到该位置。
 	if (!UTD_KismetSystemLibrary::CheckOnScreen(this, RandomLocation))
 	{
 		// 使用随机位置和玩家当前的旋转角度将玩家传送到新位置。
-		APawn* Pawn = GetPawn();
-		RandomLocation.Z += 25.f;
-		if (Pawn->TeleportTo(RandomLocation, PlayerPawn->GetActorRotation()))
+		ATD_Enemy* Enemy = GetPawn<ATD_Enemy>();
+		RandomLocation.Z += 15.f;
+		if (Enemy->TeleportTo(RandomLocation, FRotator::ZeroRotator))
 		{
-			UTD_KismetSystemLibrary::SetTimer(this, this, &ATD_AIControllerBase::MoveToTarget, 0.2, false);
+			Enemy->GetCharacterMovement()->MovementMode = MOVE_NavWalking;
+			MoveToTarget();
 			// 清除定时器句柄，确保后续的随机位置生成不会受到之前定时器的影响。
 			UTD_KismetSystemLibrary::ClearTimerHandle(this, SpawnPointHandle);
 		}
@@ -73,7 +74,5 @@ void ATD_AIControllerBase::OnMoveCompleted(FAIRequestID RequestID, const FPathFo
 		ATD_Enemy* Enemy = Cast<ATD_Enemy>(this->GetPawn());
 		Enemy->GetCharacterMovement()->MovementMode = MOVE_NavWalking;
 		FailureHandle = UTD_KismetSystemLibrary::SetTimer(this, this, &ATD_AIControllerBase::MoveToTarget, 0.5, true);
-		return;
 	}
-	
 }
