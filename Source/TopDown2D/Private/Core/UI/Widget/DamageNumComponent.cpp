@@ -27,11 +27,12 @@ void UDamageNumComponent::SetDamageNum(const float Damage, bool bBlockedHit, boo
 	DamageWidget->SetDamageNum(Damage, bBlockedHit, bCriticalHit);
 
 	// 自动销毁
-	UTD_KismetSystemLibrary::SetTimer(this, this, &UDamageNumComponent::DestroyCom, 0.6);
+	TimerHandle = UTD_KismetSystemLibrary::SetTimer(this, this, &UDamageNumComponent::DestroyCom, 0.6, false);
 }
 
 void UDamageNumComponent::DestroyCom()
 {
+	UTD_KismetSystemLibrary::ClearTimerHandle(this, TimerHandle);
 	DestroyComponent();
 }
 

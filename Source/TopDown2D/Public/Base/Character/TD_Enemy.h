@@ -22,12 +22,11 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
+	void SetColor();
+	void Repelled(const float Wallop);
 
 public:
 	UPaperZDAnimSequence* GetMoveAnim() { return MoveAnim; }
-
-	void SetColor();
-	void Repelled(const float Wallop);
 	virtual void HitEffect(const float Damage, const float Wallop) override;
 
 	UFUNCTION(Client, Reliable)
@@ -42,6 +41,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<UDamageNumComponent> DamageComponentClass;
+
+	UPROPERTY()
+	FTimerHandle TimerHandle;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

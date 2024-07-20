@@ -48,7 +48,7 @@ void ATD_WeaponBase::SetParam(UPaperFlipbook* InFlipbook, const float InDamage, 
 
 	WeaponState = EWeaponState::Active;
 
-	UTD_KismetSystemLibrary::SetTimer(this, this, &ATD_WeaponBase::Reclaim, InSurvival);
+	TimerHandle = UTD_KismetSystemLibrary::SetTimer(this, this, &ATD_WeaponBase::Reclaim, InSurvival, false);
 }
 
 void ATD_WeaponBase::Reclaim()
@@ -62,6 +62,7 @@ void ATD_WeaponBase::Reclaim()
 	TargetTag = FGameplayTag();
 	SetActorLocation(FVector(10000.f, 10000.f, -1000.f));
 	WeaponState = EWeaponState::Reclaim;
+	UTD_KismetSystemLibrary::ClearTimerHandle(this, TimerHandle);
 }
 
 void ATD_WeaponBase::BeginPlay()

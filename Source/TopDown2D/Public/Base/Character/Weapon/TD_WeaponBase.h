@@ -52,6 +52,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
 
+	UPROPERTY()
+	FTimerHandle TimerHandle;
+
 public:
 	/** 设置武器属性
 	 * 

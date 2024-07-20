@@ -3,6 +3,7 @@
 
 #include "Base/Character/TD_Enemy.h"
 
+#include "NavigationSystem.h"
 #include "PaperFlipbookComponent.h"
 #include "Base/Player/TD_AIControllerBase.h"
 #include "Components/CapsuleComponent.h"
@@ -49,6 +50,7 @@ void ATD_Enemy::Tick(float DeltaSeconds)
 void ATD_Enemy::SetColor()
 {
 	Sprite->SetSpriteColor(FColor::White);
+	UTD_KismetSystemLibrary::ClearTimerHandle(this, TimerHandle);
 }
 
 void ATD_Enemy::Repelled(const float Wallop)
@@ -69,7 +71,7 @@ void ATD_Enemy::HitEffect(const float Damage, const float Wallop)
 	// 击退
 	Repelled(Wallop);
 
-	UTD_KismetSystemLibrary::SetTimer(this, this, &ATD_Enemy::SetColor, 0.1);
+	TimerHandle = UTD_KismetSystemLibrary::SetTimer(this, this, &ATD_Enemy::SetColor, 0.1, false);
 }
 
 void ATD_Enemy::ShowDamageNumber_Implementation(const float Damage, bool bBlockedHit, bool bCriticalHit)

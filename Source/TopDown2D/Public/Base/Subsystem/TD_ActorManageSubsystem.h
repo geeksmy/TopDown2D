@@ -3,27 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Subsystems/GameInstanceSubsystem.h"
 #include "GameplayTagContainer.h"
-#include "GameFramework/Actor.h"
-#include "TD_WeaponManage.generated.h"
+#include "TD_ActorManageSubsystem.generated.h"
 
-class UPaperFlipbook;
 class ATD_WeaponBase;
-
+class UPaperFlipbook;
+/**
+ * 
+ */
 UCLASS()
-class TOPDOWN2D_API ATD_WeaponManage : public AActor
+class TOPDOWN2D_API UTD_ActorManageSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
-
-public:
-	ATD_WeaponManage();
-
-protected:
-	virtual void BeginPlay() override;
-
-private:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
-	TArray<TObjectPtr<ATD_WeaponBase>> Weapons;
 
 public:
 	/** 设置武器池
@@ -39,6 +31,10 @@ public:
 	 * @param InWallop 冲击力
 	 */
 	void SetWeapons(UPaperFlipbook* InFlipbook, const float InDamage, const FVector& InVelocity,
-	                const FVector& InWeaponScale, const FVector& InSphereScale, const FVector& InActorLocation,
-	                const FGameplayTag& InTargetTag, const float InSurvival, const float InWallop);
+					const FVector& InWeaponScale, const FVector& InSphereScale, const FVector& InActorLocation,
+					const FGameplayTag& InTargetTag, const float InSurvival, const float InWallop);
+
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
+	TArray<TObjectPtr<ATD_WeaponBase>> Weapons;
 };

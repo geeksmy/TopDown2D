@@ -6,7 +6,9 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "TD_KismetSystemLibrary.generated.h"
 
-class UTD_GameInstance;
+class UNavigationQueryFilter;
+class ANavigationData;
+class UTD_ActorManageSubsystem;
 /**
  * 自定义公共函数
  */
@@ -17,25 +19,41 @@ class TOPDOWN2D_API UTD_KismetSystemLibrary : public UBlueprintFunctionLibrary
 
 public:
 	UFUNCTION(BlueprintCallable, meta=(WorldContext="WorldContextObject"))
-	static UTD_GameInstance* GetGameInstance(const UObject* WorldContextObject);
+	static UGameInstance* GetGameInstance(const UObject* WorldContextObject);
 
-	// UFUNCTION(BlueprintCallable, meta=(WorldContext="WorldContextObject"))
+	UFUNCTION(BlueprintCallable, meta=(WorldContext="WorldContextObject"))
+	static UTD_ActorManageSubsystem* GetActorManageSubsystem(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintCallable, meta=(WorldContext="WorldContextObject"))
+	static void GetGetRandomLocationInNavigableRadius(UObject* WorldContextObject, const FVector& Origin,
+	                                                  FVector& RandomLocation, float Radius,
+	                                                  ANavigationData* NavData = NULL,
+	                                                  TSubclassOf<UNavigationQueryFilter> FilterClass = NULL);
+
 	template <class UserClass>
-	static void SetTimer(const UObject* WorldContextObject, UserClass* InObj,
-	                     typename FTimerDelegate::TMethodPtr<UserClass> InTimerMethod, float InRate);
+	static FTimerHandle SetTimer(const UObject* WorldContextObject, UserClass* InObj,
+	                             typename FTimerDelegate::TMethodPtr<UserClass> InTimerMethod, float InRate,
+	                             bool bLooping,
+	                             float InFirstDelay = -1);
 
-
-	static FTimerHandle SetTimerDelegate(FTimerDynamicDelegate Delegate, float Time, bool bLooping, bool bMaxOncePerFrame = false, float InitialStartDelay = 0.f, float InitialStartDelayVariance = 0.f);
 	static void ClearTimerHandle(const UObject* WorldContextObject, FTimerHandle Handle);
+
+	// 检查在屏幕内
+	UFUNCTION(BlueprintCallable, meta=(WorldContext="WorldContextObject"))
+	static bool CheckOnScreen(const UObject* WorldContextObject, const FVector& WorldLocation);
 };
 
 template <class UserClass>
-void UTD_KismetSystemLibrary::SetTimer(const UObject* WorldContextObject, UserClass* InObj,
-                                       FTimerDelegate::TMethodPtr<UserClass> InTimerMethod, float InRate)
+FTimerHandle UTD_KismetSystemLibrary::SetTimer(const UObject* WorldContextObject, UserClass* InObj,
+                                               FTimerDelegate::TMethodPtr<UserClass> InTimerMethod, float InRate,
+                                               bool bLooping,
+                                               float InFirstDelay)
 {
-	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull))
+	FTimerHandle TimerHandle;
+	if (const UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject,
+	                                                             EGetWorldErrorMode::LogAndReturnNull))
 	{
-		FTimerHandle TimerHandle;
-		World->GetTimerManager().SetTimer(TimerHandle, InObj, InTimerMethod, InRate);
+		World->GetTimerManager().SetTimer(TimerHandle, InObj, InTimerMethod, InRate, bLooping, InFirstDelay);
 	}
+	return TimerHandle;
 }

@@ -20,11 +20,15 @@ protected:
 private:
 	UFUNCTION()
 	void MoveToTarget();
-
-
+	void SpawnPoint();
+	
 	virtual void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
 
 protected:
-	FTimerDynamicDelegate MoveToTargetDelegate;
-	FTimerHandle MoveToTargetHandle;
+	UPROPERTY()
+	FTimerHandle SuccessHandle;
+	UPROPERTY()
+	FTimerHandle FailureHandle;
+	UPROPERTY()
+	FTimerHandle SpawnPointHandle;
 };

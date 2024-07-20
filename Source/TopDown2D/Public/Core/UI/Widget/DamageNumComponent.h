@@ -20,4 +20,8 @@ public:
 private:
 	UFUNCTION()
 	void DestroyCom();
+
+protected:
+	UPROPERTY()
+	FTimerHandle TimerHandle;
 };

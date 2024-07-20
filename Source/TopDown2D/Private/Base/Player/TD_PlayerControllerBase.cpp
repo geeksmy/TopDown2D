@@ -6,12 +6,11 @@
 #include "Base/Input/IA/IA_Base.h"
 #include "EnhancedInputSubsystems.h"
 #include "Base/Character/TD_CharacterBase.h"
-#include "Base/Character/Weapon/TD_WeaponManage.h"
 #include "Base/Input/TD_InputComponent.h"
+#include "Base/Subsystem/TD_ActorManageSubsystem.h"
 #include "Core/TD_GameplayTags.h"
 #include "Core/TD_KismetSystemLibrary.h"
-#include "Core/Game/TD_GameInstance.h"
-#include "Core/UI/Widget/DamageNumComponent.h"
+#include "Core/Enemy/TD_Skull.h"
 
 void ATD_PlayerControllerBase::BeginPlay()
 {
@@ -54,13 +53,18 @@ void ATD_PlayerControllerBase::Move(const FInputActionValue& Value)
 
 void ATD_PlayerControllerBase::Shoot(const FInputActionValue& Value)
 {
-	UTD_GameInstance* Instance = UTD_KismetSystemLibrary::GetGameInstance(this);
+	UTD_ActorManageSubsystem* ActorManageSubsystem = UTD_KismetSystemLibrary::GetActorManageSubsystem(this);
 	FHitResult CursorHit;
 	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
 	FVector ActorLocation = GetPawn()->GetActorLocation();
 	// 计算 角色位置->鼠标点击位置 的速度向量
 	const FVector Velocity = FRotator(
 		0.f, FRotationMatrix::MakeFromX(CursorHit.Location - ActorLocation).Rotator().Yaw, 0.f).Vector() * 200.f;
-	Instance->TD_WeaponManage->SetWeapons(ShuriKen, 5.f, Velocity, FVector(1.f), FVector(1.f),
-	                                      ActorLocation, FTD_GameplayTags::Get().CharacterEnemy, 1.f, 15.f);
+	ActorManageSubsystem->SetWeapons(ShuriKen, 5.f, Velocity, FVector(1.f), FVector(1.f),
+	                                 ActorLocation, FTD_GameplayTags::Get().CharacterEnemy, 1.f, 15.f);
+
+	// 临时生成敌人
+	const FVector Location = FVector(0.f, 0.f, -1000.f);
+	const FRotator Rotator = FRotator(0);
+	GetWorld()->SpawnActor(ATD_Skull::StaticClass(), &Location, &Rotator);
 }

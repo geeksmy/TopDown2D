@@ -27,6 +27,7 @@ public class TopDown2D : ModuleRules
 			"GameplayTags",
 			"GameplayTasks", 
 			"AIModule",
+			"NavigationSystem"
 		});
 
 		// Uncomment if you are using Slate UI
