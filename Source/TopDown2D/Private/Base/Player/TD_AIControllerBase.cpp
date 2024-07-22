@@ -16,20 +16,12 @@ ATD_AIControllerBase::ATD_AIControllerBase()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void ATD_AIControllerBase::BeginPlay()
-{
-	Super::BeginPlay();
-
-	SpawnPointHandle = UTD_KismetSystemLibrary::SetTimer(this, this, &ATD_AIControllerBase::SpawnPoint, 0.3, true);
-}
-
 void ATD_AIControllerBase::MoveToTarget()
 {
 	ATD_CharacterBase* CharacterBase = Cast<ATD_CharacterBase>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	ATD_Enemy* Enemy = Cast<ATD_Enemy>(this->GetPawn());
 	if (IsValid(Enemy) && IsValid(CharacterBase))
 	{
-		
 		MoveToActor(CharacterBase, 5.f, false);
 	}
 }
@@ -48,11 +40,11 @@ void ATD_AIControllerBase::SpawnPoint()
 	if (!UTD_KismetSystemLibrary::CheckOnScreen(this, RandomLocation))
 	{
 		// 使用随机位置和玩家当前的旋转角度将玩家传送到新位置。
-		ATD_Enemy* Enemy = GetPawn<ATD_Enemy>();
-		RandomLocation.Z += 15.f;
-		if (Enemy->TeleportTo(RandomLocation, FRotator::ZeroRotator))
+		ATD_Enemy* EnemyBase = GetPawn<ATD_Enemy>();
+		RandomLocation.Z = 50.f;
+		if (EnemyBase->TeleportTo(RandomLocation, FRotator::ZeroRotator))
 		{
-			Enemy->GetCharacterMovement()->MovementMode = MOVE_NavWalking;
+			EnemyBase->GetCharacterMovement()->MovementMode = MOVE_NavWalking;
 			MoveToTarget();
 			// 清除定时器句柄，确保后续的随机位置生成不会受到之前定时器的影响。
 			UTD_KismetSystemLibrary::ClearTimerHandle(this, SpawnPointHandle);

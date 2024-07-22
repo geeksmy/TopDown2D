@@ -13,4 +13,9 @@ UCLASS()
 class TOPDOWN2D_API ATD_GameState : public ATD_GameStateBase
 {
 	GENERATED_BODY()
+
+	ATD_GameState();
+
+protected:
+	virtual void Tick(float DeltaSeconds) override;
 };

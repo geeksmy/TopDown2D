@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "GameplayTagContainer.h"
+#include "Base/Character/TD_Enemy.h"
 #include "TD_ActorManageSubsystem.generated.h"
 
+class ATD_Enemy;
 class ATD_WeaponBase;
 class UPaperFlipbook;
 /**
@@ -31,10 +33,21 @@ public:
 	 * @param InWallop 冲击力
 	 */
 	void SetWeapons(UPaperFlipbook* InFlipbook, const float InDamage, const FVector& InVelocity,
-					const FVector& InWeaponScale, const FVector& InSphereScale, const FVector& InActorLocation,
-					const FGameplayTag& InTargetTag, const float InSurvival, const float InWallop);
+	                const FVector& InWeaponScale, const FVector& InSphereScale, const FVector& InActorLocation,
+	                const FGameplayTag& InTargetTag, const float InSurvival, const float InWallop);
+
+	void SetEnemys(const FEnemy& EnemyParam);
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
 	TArray<TObjectPtr<ATD_WeaponBase>> Weapons;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
+	TArray<TObjectPtr<ATD_Enemy>> ActiveEnemys;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
+	TArray<TObjectPtr<ATD_Enemy>> ReclaimEnemys;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
+	uint8 MaxEnemy = 5;
 };

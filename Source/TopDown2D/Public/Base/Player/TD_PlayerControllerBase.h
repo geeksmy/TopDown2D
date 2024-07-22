@@ -30,9 +30,6 @@ public:
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UIA_Base> ShootIA;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TObjectPtr<UPaperFlipbook> ShuriKen;
-
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;

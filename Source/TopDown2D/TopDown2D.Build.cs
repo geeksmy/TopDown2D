@@ -19,7 +19,8 @@ public class TopDown2D : ModuleRules
 			"PaperZD",
 			"UMG",
 			"Paper2D",
-			"TopDown2D"
+			"TopDown2D",
+			"DataRegistry"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[]

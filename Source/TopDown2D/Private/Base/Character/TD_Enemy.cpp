@@ -9,6 +9,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Core/TD_GameplayTags.h"
 #include "Core/TD_KismetSystemLibrary.h"
+#include "Core/Anim/TD_EnemyAnimInstance.h"
 #include "Core/UI/Widget/DamageNumComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -28,18 +29,24 @@ ATD_Enemy::ATD_Enemy()
 
 	Tags.Add(FTD_GameplayTags::Get().CharacterEnemy.GetTagName());
 
+	static ConstructorHelpers::FClassFinder<UTD_EnemyAnimInstance> ABP_Enemy_Class(
+		TEXT("/Script/PaperZD.PaperZDAnimBP'/Game/BP/Amin/Enemy/ABP_Enemy.ABP_Enemy_C'"));
+	if (ABP_Enemy_Class.Succeeded())
+	{
+		SetAnimInstance(ABP_Enemy_Class.Class);
+	}
+
+	static ConstructorHelpers::FObjectFinder<USoundBase> HitSound_Obj(
+		TEXT("/Script/Engine.SoundCue'/Game/Asset/Sound/Coins_Cue.Coins_Cue'"));
+	if (HitSound_Obj.Succeeded())
+	{
+		HitSound = HitSound_Obj.Object;
+	}
+
 	DamageComponentClass = UDamageNumComponent::StaticClass();
 	AIControllerClass = ATD_AIControllerBase::StaticClass();
 
 	GetCharacterMovement()->FallingLateralFriction = 2.f;
-	GetCharacterMovement()->MovementMode = MOVE_NavWalking;
-}
-
-void ATD_Enemy::BeginPlay()
-{
-	Super::BeginPlay();
-	GetCharacterMovement()->MaxWalkSpeed = DAEnemy->Speed;
-	MoveAnim = DAEnemy->MoveAnim;
 }
 
 void ATD_Enemy::Tick(float DeltaSeconds)
@@ -59,7 +66,7 @@ void ATD_Enemy::Repelled(const float Wallop)
 	GetCharacterMovement()->StopMovementImmediately();
 	const FVector Direction = (GetActorLocation() - UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->GetActorLocation()).
 		GetSafeNormal();
-	LaunchCharacter(Direction * (Wallop / DAEnemy->Weight), true, false);
+	LaunchCharacter(Direction * (Wallop / EnemyParam.Weight), true, false);
 }
 
 void ATD_Enemy::HitEffect(const float Damage, const float Wallop)
@@ -73,6 +80,21 @@ void ATD_Enemy::HitEffect(const float Damage, const float Wallop)
 	Repelled(Wallop);
 
 	TimerHandle = UTD_KismetSystemLibrary::SetTimer(this, this, &ATD_Enemy::SetColor, 0.1, false);
+}
+
+void ATD_Enemy::SetParam(const FEnemy& InEnemyParam)
+{
+	EnemyParam = InEnemyParam;
+	// 未设置胶囊体大小会导致瞬移失败, 并且无法移动
+	GetCapsuleComponent()->SetCapsuleSize(InEnemyParam.Radius, InEnemyParam.HalfHeight);
+	GetCharacterMovement()->MaxWalkSpeed = EnemyParam.Speed;
+	MoveAnim = EnemyParam.MoveAnim;
+	EnemyState = EEnemyState::Active;
+
+	ATD_AIControllerBase* AIControllerBase = GetController<ATD_AIControllerBase>();
+	const FTimerHandle Handle = UTD_KismetSystemLibrary::SetTimer(
+		AIControllerBase, AIControllerBase, &ATD_AIControllerBase::SpawnPoint, 0.3, true);
+	AIControllerBase->SetSpawnPointHandle(Handle);
 }
 
 void ATD_Enemy::ShowDamageNumber_Implementation(const float Damage, bool bBlockedHit, bool bCriticalHit)

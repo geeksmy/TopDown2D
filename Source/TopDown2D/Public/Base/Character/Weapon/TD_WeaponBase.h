@@ -19,6 +19,30 @@ enum class EWeaponState : uint8
 	Reclaim // 回收
 };
 
+USTRUCT(BlueprintType)
+struct FWeapon : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName="ID")
+	FGuid ID = FGuid();
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName="武器")
+	TObjectPtr<UPaperFlipbook> Flipbook = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName="伤害")
+	float Damage = 0.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName="武器尺寸")
+	FVector WeaponScale = FVector::Zero();
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName="碰撞体")
+	FVector SphereScale = FVector::Zero();
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName="目标标签")
+	FGameplayTag TargetTag = FGameplayTag();
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName="存活时间")
+	float Survival = 0.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName="冲击力")
+	float Wallop = 0.f;
+};
+
 UCLASS()
 class TOPDOWN2D_API ATD_WeaponBase : public AActor
 {

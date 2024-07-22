@@ -14,13 +14,9 @@ class TOPDOWN2D_API ATD_AIControllerBase : public AAIController
 public:
 	ATD_AIControllerBase();
 
-protected:
-	virtual void BeginPlay() override;
-
 private:
 	UFUNCTION()
 	void MoveToTarget();
-	void SpawnPoint();
 	
 	virtual void OnMoveCompleted(FAIRequestID RequestID, const FPathFollowingResult& Result) override;
 
@@ -31,4 +27,8 @@ protected:
 	FTimerHandle FailureHandle;
 	UPROPERTY()
 	FTimerHandle SpawnPointHandle;
+
+public:
+	void SpawnPoint();
+	void SetSpawnPointHandle(const FTimerHandle& InHandle) { SpawnPointHandle = InHandle; };
 };

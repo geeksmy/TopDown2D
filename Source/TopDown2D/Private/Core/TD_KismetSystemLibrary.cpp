@@ -3,6 +3,7 @@
 
 #include "Core/TD_KismetSystemLibrary.h"
 
+#include "DataRegistrySubsystem.h"
 #include "NavigationSystem.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/GameplayStatics.h"

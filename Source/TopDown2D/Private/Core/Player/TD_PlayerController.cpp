@@ -6,7 +6,7 @@
 #include "Base/Input/IA/IA_Axis1D.h"
 #include "Base/Input/IA/IA_Axis2D.h"
 #include "Core/Input/IMC_Context.h"
-#include "PaperFlipbook.h"
+
 
 ATD_PlayerController::ATD_PlayerController()
 {
@@ -18,12 +18,5 @@ ATD_PlayerController::ATD_PlayerController()
 	ShootIA = CreateDefaultSubobject<UIA_Axis1D>("ShootIA");
 	ContextIMC->AddMappings(ShootIA, EKeys::LeftMouseButton);
 	
-	static ConstructorHelpers::FObjectFinder<UPaperFlipbook> ShuriKen_Obj(
-		TEXT("/Script/Paper2D.PaperFlipbook'/Game/Asset/Weapons/Shuriken/Shuriken_Attack.Shuriken_Attack'"));
-	if (ShuriKen_Obj.Succeeded())
-	{
-		ShuriKen = ShuriKen_Obj.Object;
-	}
-
 	bShowMouseCursor = true;
 }

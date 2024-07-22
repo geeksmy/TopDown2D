@@ -3,10 +3,12 @@
 
 #include "Base/Subsystem/TD_ActorManageSubsystem.h"
 
+#include "Base/Character/TD_Enemy.h"
 #include "Base/Character/Weapon/TD_WeaponBase.h"
 
 void UTD_ActorManageSubsystem::SetWeapons(UPaperFlipbook* InFlipbook, const float InDamage, const FVector& InVelocity,
-                                          const FVector& InWeaponScale, const FVector& InSphereScale, const FVector& InActorLocation,
+                                          const FVector& InWeaponScale, const FVector& InSphereScale,
+                                          const FVector& InActorLocation,
                                           const FGameplayTag& InTargetTag, const float InSurvival, const float InWallop)
 {
 	ATD_WeaponBase* WeaponReclaim = nullptr;
@@ -27,5 +29,35 @@ void UTD_ActorManageSubsystem::SetWeapons(UPaperFlipbook* InFlipbook, const floa
 
 	WeaponReclaim->SetActorLocation(InActorLocation);
 	WeaponReclaim->SetParam(InFlipbook, InDamage, InVelocity, InWeaponScale, InSphereScale, InTargetTag, InSurvival,
-							InWallop);
+	                        InWallop);
+}
+
+void UTD_ActorManageSubsystem::SetEnemys(const FEnemy& EnemyParam)
+{
+	if (ActiveEnemys.Num() >= MaxEnemy)
+	{
+		return;
+	}
+	
+	ATD_Enemy* EnemyReclaim = nullptr;
+	for (const TObjectPtr<ATD_Enemy> Enemy : ReclaimEnemys)
+	{
+		if (Enemy->EnemyState == EEnemyState::Reclaim)
+		{
+			EnemyReclaim = Enemy;
+		}
+	}
+
+	if (!IsValid(EnemyReclaim))
+	{
+		if (ActiveEnemys.Num() + ReclaimEnemys.Num() >= MaxEnemy)
+		{
+			return;
+		}
+		ATD_Enemy* NewEnemy = GetWorld()->SpawnActor<ATD_Enemy>(FVector(0.f, 0.f, -1000.f), FRotator::ZeroRotator);
+		ActiveEnemys.Add(NewEnemy);
+		EnemyReclaim = NewEnemy;
+	}
+
+	EnemyReclaim->SetParam(EnemyParam);
 }
